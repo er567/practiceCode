@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+    <input type="number" value="" min="1970" id="jYear"/>年
+    <input type="number" value="" min="1" max="12" id="jMonth"/>月
+    <button id="jBtn">点我</button>
+    <br />
+    时间段为：<span id="jTimeSlot"></span>
+    <script type="text/javascript">
+    window.onload = function (){
+      var btn = document.getElementById("jBtn"),
+          timeSlot = document.getElementById("jTimeSlot");
+
+      btn.onclick=function(){
+        var year = document.getElementById("jYear").value,
+            month = document.getElementById("jMonth").value;
+        if(!year || !month){alert("你TM倒是输入吖");return;}
+        var lastDay = new Date(year, month, 0).getDate(),
+            startTime = new Date(year, month, 01, 0),
+            lastTime = new Date(year, month, lastDay, 23, 59, 59);
+        console.log(lastDay);
+        console.log(startTime + "\n" + lastTime);
+        timeSlot.innerHTML= startTime + " => " + lastTime;
+      }
+      
+    }
+    </script>
+    </body>
+</html>
