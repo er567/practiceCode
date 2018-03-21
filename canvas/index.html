@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		.clip {
+			position: absolute;
+			clip: rect(0 0 0 0);
+		}
+
+		.ui-button {
+			display: inline-block;
+			line-height: 1.42858;
+			font-size: 14px;
+			text-align: center;
+			border-radius: 4px;
+			padding: 9px 15px;
+			min-width: 50px;
+			background-repeat: no-repeat;
+			background-position: center;
+			-webkit-transition: border-color .15s, background-color .15s;
+			transition: border-color .15s, background-color .15s;
+			cursor: pointer;
+			overflow: visible;
+			border: 1px solid #00a5e0;
+			background-color: #00a5e0;
+			color: #fff;
+		}
+	</style>
+</head>
+
+<body>
+	<div align="center">
+		<img src="img.png" id="jBg">
+	</div>
+	<div id="imgBox" align="center">
+		<input type="text" id="jTxt">
+		<br />
+		<input type="file" id="uploadFile" class="clip" accept="image/*">
+		<label class="ui-button ui-button-primary" for="uploadFile">选择图片</label>
+	</div>
+	<script>
+		window.onload=function () {
+			var eleUploadFile = document.getElementById('uploadFile'),
+				eleImgCover = document.getElementById('imgCover'),
+				eleImgUploadX = document.getElementById('imgUploadX'),
+				data = ['img.png'],
+				base64 = [],
+				txt,
+				opt = {
+					init: function () {
+						var self = this;
+						if (history.pushState) {
+							eleUploadFile.addEventListener('change', function (event) {
+								var reader = new FileReader();
+								var file = event.target.files[0] || event.dataTransfer.files[0];
+								reader.onload = function (e) {
+									var base64 = e.target.result;
+									txt = document.getElementById('jTxt').value;
+									if (base64.length > 1024 * 50) {
+										alert('图片尺寸请小于50K');
+										return;
+									} else {
+										// 使用canvas合成图片，并base64化
+										var imgUpload = new Image();
+										imgUpload.onload = function () {
+											// 绘制
+											self.hecheng(imgUpload)
+										};
+										imgUpload.src = base64;
+									}
+								};
+								reader.readAsDataURL(file);
+							});
+						}
+					},
+					hecheng: function (imgUpload) {
+						var self = this;
+						self.draw(imgUpload, function () {
+							document.getElementById('imgBox').innerHTML =
+								'<p style="padding:10px 0">合成图片成功！可以鼠标另存图片查看我是否是一张图片~~！</p><img src="' + base64[0] + '">';
+						})
+					},
+					draw: function (imgUpload, fn) {
+						var c = document.createElement('canvas'),
+							ctx = c.getContext('2d'),
+							len = data.length;
+						c.width = 300;
+						c.height = 430;
+						ctx.rect(0, 0, c.width, c.height);
+						var img = document.getElementById("jBg");
+						var pat = ctx.createPattern(img, 'no-repeat');
+						ctx.fillStyle = pat;
+						ctx.fill();
+						ctx.fillStyle = '#fff';
+						ctx.strokeStyle = '#fff'; //设置笔触的颜色
+						ctx.textAlign = "center";
+						ctx.font = "bold 20px '微软雅黑'"; //设置字体
+						ctx.textBaseline = 'hanging';
+						console.log(txt)
+						ctx.fillText(txt, 150, 50, 200);
+						ctx.drawImage(imgUpload, 78, 78, 150, 150); //拉伸图片
+						//保存生成作品图片
+						base64.push(c.toDataURL("image/png", 0.92));
+						// download(base64[0]) //下载
+						fn();
+					},
+					download: function (src) {
+						var $a = $("<a></a>").attr("href", src).attr("download", "img.png");
+						$a[0].click();
+					}
+				}
+			opt.init();
+		}
+	</script>
+
+</body>
+
+</html>
