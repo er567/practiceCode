@@ -11,3 +11,5 @@
 5. requestAnimationFrame优化web动画
 
 6. canvas实现图片合并,添加文本
+
+7. randomAccess从数组中获取指定数量的随机数
