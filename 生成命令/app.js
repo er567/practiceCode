@@ -1,7 +1,7 @@
 const xlsx = require('node-xlsx');
 const fs = require('fs');
 const sheets = xlsx.parse('./1.xlsx');
-var str = ``;
+var str = '';
 var options = process.argv;
 var time = options[2]
 
@@ -11,7 +11,7 @@ sheets.forEach(function(sheet){
         var row = sheet['data'][rowId];
         str += `
 interface ${row[1]}
-ipv6 nd ra prefix ${row[0]}
+ipv6 nd ra prefix ${row[0].replace('::1','::')}
 ipv6 address ${row[0]}
 ipv6 nd ns retrans-timer ${time}
 quit

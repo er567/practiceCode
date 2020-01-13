@@ -10,6 +10,6 @@
 
 3. 执行脚本 
 
-        node app.js
+        node app.js time
 
 4. 查看
